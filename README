@@ -1,0 +1,59 @@
+Boot scripts for OLPC XO 1.75
+=============================
+
+Here's a couple of scripts that make it feasible/easy to run an up-to-date
+Linux distribution, such as Fedora, on the ARM-based OLPC XO 1.75.
+
+Installation
+------------
+
+They need to be copied to the boot partition's boot/ subdirectory.
+OpenFirmware considers either the active partition or the first partiiton
+to be the boot partition. It needs to be formatted with a ext2/3/4 or FAT
+filesystem. Note that if the boot partition is separate from the root
+partition, this means the the scripts will end up in /boot/boot.
+
+On a typical Fedora ARM image, this is the partition 2. Note that the
+bls.fth currently assumes that the first partition is an EFI system
+partition with a GRUB installation as is the case for the Fedora images.
+
+Contents
+--------
+
+* fixes.fth - OpenFirmware fixes. This script applies a couple of fixes to
+              OpenFirmware. Most notably, it fixes the construction of the
+              FDT (Flattened Device Tree) structure. Contains some more
+              fixes too. This will eventually be folded into OpenFirmware.
+
+* dt.fth    - This adjusts the device tree to be compatible with what
+              mainline Linux expects. Currently it breaks boot of the OLPC
+              kernels. Will also be folded into OpenFirmware once it's
+              complete and the compatibility with OLPC kernels is solved.
+
+* bls.fth   - Implements the kernel/initramfs selection that's to some
+              extent compliant with the Boot Loader Specification.
+              This just sets "boot-device", "boot-file" and "ramdisk".
+              You can set those variable manually instead, if you wish.
+
+* menu.fth  - A simple boot selector. Also ends up setting "boot-device",
+              "boot-file" and "ramdisk". Disabled by default, useful for
+              debugging.
+
+* olpc.fth  - Main boot scripts. Sources the above and initiates the kernel
+              load with the "boot" command.
+
+Disclaimer
+----------
+
+I'm not really proficient with Forth. The quality of the code might reflect
+that. I'm accepting patches.
+
+License
+-------
+
+I'm allowing redistribution of the scripts under the terms of any of the
+licenses that are permissible for OpenFirmware. To my knowledge, it's the
+MIT license, BSD license or GPL. This is because some of the above code
+should end up in a future OpenFirmware release.
+
+Copyright (C) Lubomir Rintel <lkundrak@v3.sk>
